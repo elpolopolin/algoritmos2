@@ -109,6 +109,7 @@ class Funciones {
     boolean esPrefijo(String s1, String s2) {
         int i =0;
         if (s1.length() > s2.length()){return false;}
+
         while (i < s1.length() & i < s2.length()){
             if (s1.charAt(i) != s2.charAt(i)) {
                 return false;
@@ -120,30 +121,43 @@ class Funciones {
     }
 
     boolean esSufijo(String s1, String s2) {
-        // COMPLETAR
-        return false;
+        //dar vuelta s1 y s2}
+        String s1AlReves = "";
+        String s2AlReves = "";
+        for (int i= (s1.length()-1);i>=0;i--){
+            s1AlReves += s1.charAt(i);
+            //ystem.out.println(i);
+        }
+         for (int x= (s2.length()-1);x>=0;x--){
+            s2AlReves += s2.charAt(x);
+            //ystem.out.println(i);
+        }
+        return esPrefijo(s1AlReves, s2AlReves);
     }
 
 /***  Segunda parte: Debugging ***/
 
     boolean xor(boolean a, boolean b) {
-        return a || b && !(a && b);
+        return (a || b) && !(a & b);
     }
 
     boolean iguales(int[] xs, int[] ys) {
         boolean res = true;
-
+        
+         if (xs.length != ys.length) {
+            return false;
+        }
         for (int i = 0; i < xs.length; i++) {
             if (xs[i] != ys[i]) {
                 res = false;
             }
         }
-        return res;
+        return res && (xs.length == ys.length);
     }
 
     boolean ordenado(int[] xs) {
         boolean res = true;
-        for (int i = 0; i < xs.length; i++) {
+        for (int i = 0; i < xs.length -1; i++) {
             if (xs[i] > xs [i+1]) {
                 res = false;
             }
@@ -152,24 +166,26 @@ class Funciones {
     }
 
     int maximo(int[] xs) {
-        int res = 0;
-        for (int i = 0; i <= xs.length; i++) {
-            if (xs[i] > res) res = i;
+        int res = xs[0];
+        for (int i = 0; i < xs.length; i++) {
+            if (xs[i] > res){
+                res = xs[i];
+            } 
         }
         return res;
     }
 
     boolean todosPositivos(int[] xs) {
-        boolean res = false;
+        boolean res = true;
         for (int x : xs) {
             if (x > 0) {
-                res = true;
-            } else {
+            }else{
                 res = false;
             }
         }
         return res;
     }
 
+    //new int[0]) que significa wey? cheuquear los test
     //this.maximo({1,2,3}) //this refiere a la clase en la q estas
 }
