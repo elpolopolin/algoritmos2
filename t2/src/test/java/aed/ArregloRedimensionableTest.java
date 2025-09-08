@@ -9,7 +9,6 @@ class ArregloRedimensionableTest {
     @Test
     void nuevoVectorEstaVacio() {
         ArregloRedimensionableDeRecordatorios vector = new ArregloRedimensionableDeRecordatorios();
-
         assertEquals(0, vector.longitud());
     }
 

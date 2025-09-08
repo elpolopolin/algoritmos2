@@ -2,38 +2,71 @@ package aed;
 
 class ArregloRedimensionableDeRecordatorios {
 
+    private Recordatorio[] recordatorios; //arreglo
+
     public ArregloRedimensionableDeRecordatorios() {
-        // Implementar
+        this.recordatorios = new Recordatorio[0];
     }
 
     public int longitud() {
-        // Implementar
-        return -1;
+        int cont = 0;
+        for (Recordatorio elem : this.recordatorios){ //for each de tipo Recordatorios
+            cont++;
+        }
+        return cont;
     }
 
     public void agregarAtras(Recordatorio i) {
-        // Implementar
+      
+        Recordatorio[] nuevo = new Recordatorio[this.longitud() + 1];
+        System.out.println(this.longitud());
+        for (int h = 0; h < this.longitud(); h++) {
+            nuevo[h] = recordatorios[h];
+        }
+        nuevo[this.longitud()] = i;
+        this.recordatorios = nuevo;
+    
     }
 
     public Recordatorio obtener(int i) {
-        // Implementar
-        return null;
+        
+        return this.recordatorios[i];
     }
 
     public void quitarAtras() {
-        // Implementar
+        if (this.longitud() >0){
+            Recordatorio[] nuevo = new Recordatorio[this.longitud() -1];
+            for (int i = 0; i<this.longitud() -1; i++){
+                nuevo[i] = recordatorios[i];
+            }
+            this.recordatorios = nuevo;
+        }
+
     }
 
     public void modificarPosicion(int indice, Recordatorio valor) {
-        // Implementar
+       
+        this.recordatorios[indice] = valor;
     }
 
     public ArregloRedimensionableDeRecordatorios(ArregloRedimensionableDeRecordatorios vector) {
-        // Implementar
+        Recordatorio[] nuevo = new Recordatorio[vector.longitud()];
+        int i = 0;
+        for (Recordatorio elem : vector.recordatorios) {
+            nuevo[i] = new Recordatorio(elem.mensaje(),elem.fecha(),elem.horario());
+            i++;
+        }
+        this.recordatorios = nuevo;
     }
 
     public ArregloRedimensionableDeRecordatorios copiar() {
-        // Implementar
-        return null;
+        
+        ArregloRedimensionableDeRecordatorios copia = new ArregloRedimensionableDeRecordatorios();
+        for (Recordatorio elem : this.recordatorios){
+            copia.agregarAtras(new Recordatorio(elem.mensaje(),elem.fecha(),elem.horario()));
+        }
+        return copia;
+        
+       /* return new ArregloRedimensionableDeRecordatorios(this); */
     }
 }
