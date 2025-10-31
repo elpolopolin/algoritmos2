@@ -149,22 +149,40 @@ public class ABB<T extends Comparable<T>> {
         Nodo nodoAeliminar = nodoElemento(elem);
         if (nodoAeliminar == null) return;
         
-        if (nodoAeliminar.izq == null) {
+        if (nodoAeliminar.izq == null) { 
             transplantar(nodoAeliminar, nodoAeliminar.der);
+            
         } else if (nodoAeliminar.der == null) { 
             transplantar(nodoAeliminar, nodoAeliminar.izq);
+            
         }
-
+        //hoja
         if(nodoAeliminar.izq == null && nodoAeliminar.der == null){ //caso hoja.
             if (nodoAeliminar.padre.valor.compareTo(nodoAeliminar.valor) > 0){
                 nodoAeliminar.padre.izq = null;
             } else {
                 nodoAeliminar.padre.der = null;
             }
-            this.tamaño --;
+            
         }
 
-        
+        if(nodoAeliminar.izq != null && nodoAeliminar.der != null)
+            {
+                Nodo actual = nodoAeliminar.izq; //predecesor inmediato
+                while (actual.der != null) {
+                    actual = actual.der;
+                }
+                if (actual.izq != null && actual!= nodoAeliminar.izq){
+                    actual.padre.der = actual.izq;
+                    actual.izq.padre = actual.padre;
+                }else if(actual == nodoAeliminar.izq && actual.izq != null){
+                    nodoAeliminar.izq = actual.izq;
+                    nodoAeliminar.izq.padre = nodoAeliminar;
+                }
+                nodoAeliminar.valor = actual.valor;
+
+            }
+        this.tamaño --;
         
     }
 
@@ -176,11 +194,14 @@ public class ABB<T extends Comparable<T>> {
         private Nodo _actual;
 
         public boolean haySiguiente() {            
-            throw new UnsupportedOperationException("No implementada aun");
+            if(this._actual.izq != null || this._actual.der != null){
+            return true;
+            }
+            return false;
         }
     
         public T siguiente() {
-            throw new UnsupportedOperationException("No implementada aun");
+            
         }
     }
 
