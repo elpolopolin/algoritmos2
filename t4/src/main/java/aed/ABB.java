@@ -1,10 +1,6 @@
 package aed;
-
-import java.util.*;
-
-// Todos los tipos de datos "Comparables" tienen el método compareTo()
 // elem1.compareTo(elem2) devuelve un entero. Si es mayor a 0, entonces elem1 > elem2
-public class ABB<T extends Comparable<T>> {
+public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     public Nodo raiz;
     public int tamaño;
 
@@ -28,6 +24,21 @@ public class ABB<T extends Comparable<T>> {
         this.tamaño = 0;
     }
 
+    //constructor x copia
+    public ABB(ABB<T> otro) {
+        this.raiz = clonar(otro.raiz, null);
+        this.tamaño = otro.tamaño; 
+    }
+
+    private Nodo clonar(Nodo o, Nodo padreNuevo) {
+        if (o == null) return null;
+        Nodo n = new Nodo(o.valor);
+        n.padre = padreNuevo;
+        n.izq = clonar(o.izq, n);
+        n.der = clonar(o.der, n);
+        return n;
+    }
+
     public int cardinal() {
         return this.tamaño;
     }
@@ -45,6 +56,26 @@ public class ABB<T extends Comparable<T>> {
             return nodoactual.valor;
         }
     }
+    public Nodo NodoMinRecur(Nodo n){
+        if(n.izq == null) return n; 
+        else return NodoMinRecur(n.izq);
+    }
+
+    public Nodo hallarsiguienteMenor(Nodo n){
+        if (n == null) return null;
+        if (n.der != null){
+            return NodoMinRecur(n.der);
+        }
+        //CASO 2, NO HAY DERECHO, SUBIR
+        Nodo padre= n.padre;
+        while (padre != null && padre.der == n){ //mientras el minimo sea hijo derecho subimos
+            n =padre;
+            padre = padre.padre;
+        }
+        return padre;
+    }
+   
+
      public T maxRecur(Nodo nodoactual){
         if(nodoactual.der != null){
             return maxRecur(nodoactual.der);
@@ -151,58 +182,65 @@ public class ABB<T extends Comparable<T>> {
         
         if (nodoAeliminar.izq == null) { 
             transplantar(nodoAeliminar, nodoAeliminar.der);
+            this.tamaño --;
+            return;
             
         } else if (nodoAeliminar.der == null) { 
             transplantar(nodoAeliminar, nodoAeliminar.izq);
-            
+            this.tamaño --;
+            return;
         }
-        //hoja
-        if(nodoAeliminar.izq == null && nodoAeliminar.der == null){ //caso hoja.
-            if (nodoAeliminar.padre.valor.compareTo(nodoAeliminar.valor) > 0){
-                nodoAeliminar.padre.izq = null;
-            } else {
-                nodoAeliminar.padre.der = null;
-            }
-            
-        }
-
         if(nodoAeliminar.izq != null && nodoAeliminar.der != null)
             {
                 Nodo actual = nodoAeliminar.izq; //predecesor inmediato
                 while (actual.der != null) {
                     actual = actual.der;
                 }
-                if (actual.izq != null && actual!= nodoAeliminar.izq){
-                    actual.padre.der = actual.izq;
-                    actual.izq.padre = actual.padre;
-                }else if(actual == nodoAeliminar.izq && actual.izq != null){
-                    nodoAeliminar.izq = actual.izq;
-                    nodoAeliminar.izq.padre = nodoAeliminar;
-                }
                 nodoAeliminar.valor = actual.valor;
-
+                transplantar(actual, actual.izq);
+                this.tamaño --;
             }
-        this.tamaño --;
-        
     }
 
     public String toString(){
-        throw new UnsupportedOperationException("No implementada aun");
+        Iterador<T> iterador = new ABB_Iterador();
+        String texto = "{";
+        while(iterador.haySiguiente()){
+            texto = texto + iterador.siguiente();
+            if(iterador.haySiguiente()){
+                texto = texto + ",";
+            }
+        }
+        texto = texto + "}";
+        return texto;
     }
 
-    public class ABB_Iterador {
+    public class ABB_Iterador implements Iterador<T> {
+        private Nodo _anterior;    
         private Nodo _actual;
+       
+
+        public ABB_Iterador(){
+            this._anterior = null;
+            if (raiz != null){
+                this._actual = NodoMinRecur(raiz);
+            }else  {
+                this._actual = raiz;
+            }
+            
+        }
 
         public boolean haySiguiente() {            
-            if(this._actual.izq != null || this._actual.der != null){
-            return true;
-            }
-            return false;
+           return this._actual != null; 
         }
     
         public T siguiente() {
-            
-        }
+            Nodo actualAnterior = this._actual;
+            this._anterior = actualAnterior;
+            Nodo siguiente = hallarsiguienteMenor(this._actual);
+            this._actual = siguiente;
+            return actualAnterior.valor;
+        } 
     }
 
     public ABB_Iterador iterador() {
