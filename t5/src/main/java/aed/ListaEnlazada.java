@@ -62,22 +62,43 @@ public class ListaEnlazada<T> { //lista doblemente enlazada
     }
 
     public void eliminar(int i) {
-        Nodo Aeliminar = this.primero;
-        for (int n = 0; n<i;n++) {
-            Aeliminar = Aeliminar.siguiente;
-        }
-        if (Aeliminar.anterior != null && Aeliminar.siguiente != null){
-            Aeliminar.anterior.siguiente = Aeliminar.siguiente;
-            Aeliminar.siguiente.anterior = Aeliminar.anterior;
-        } else if (i == 0){
-            Aeliminar.siguiente.anterior = null; //no tiene anterior el primero
-            this.primero = Aeliminar.siguiente;
-        } else if(i == this.longitud){
-            Aeliminar.anterior.siguiente = null; // no tiene posterior el ultimo
-            this.ultimo = Aeliminar.anterior;
-        }
-        this.longitud = this.longitud - 1; 
-        
+            //Chequeo de rango
+            if (i < 0 || i >= this.longitud) {
+                return;
+            }
+            //Lista de un solo elemento
+            if (this.longitud == 1) {
+                this.primero = null;
+                this.ultimo = null;
+                this.longitud = 0;
+                return;
+            }
+            // Eliminar primero
+            if (i == 0) {
+                Nodo aEliminar = this.primero;
+                Nodo sig = aEliminar.siguiente;      
+                this.primero = sig;
+                sig.anterior = null;                
+                this.longitud--;
+                return;
+            }
+            if (i == this.longitud - 1) {
+                Nodo aEliminar = this.ultimo;
+                Nodo ant = aEliminar.anterior;     
+                this.ultimo = ant;
+                ant.siguiente = null;
+                this.longitud--;
+                return;
+            }
+            // Eliminar en el medio
+            Nodo aEliminar = this.primero;
+            for (int n = 0; n < i; n++) {
+                aEliminar = aEliminar.siguiente;
+            }
+            aEliminar.anterior.siguiente = aEliminar.siguiente;
+            aEliminar.siguiente.anterior = aEliminar.anterior;
+
+            this.longitud--;
     }
 
     public void modificarPosicion(int indice, T elem) {

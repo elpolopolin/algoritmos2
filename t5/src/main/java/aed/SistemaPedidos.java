@@ -10,15 +10,26 @@ public class SistemaPedidos {
     }
 
     public void agregarPedido(Pedido pedido){
-        throw new UnsupportedOperationException("No implementado aún");
+          ABB<Pedido>.HandleABB handle = pedidosPorId.insertar(pedido);
+          colallegada.agregarAtras(handle);
     }
 
     public Pedido proximoPedido(){
-        throw new UnsupportedOperationException("No implementado aún");
+         if (colallegada.longitud() == 0){
+            return null;
+         } else{
+            ABB<Pedido>.HandleABB handle = colallegada.obtener(0);
+            Pedido p = handle.valor();
+            handle.eliminar();           
+            colallegada.eliminar(0);          
+            return p;
+         }
+        
     }
 
     public Pedido pedidoMenorId(){
-        throw new UnsupportedOperationException("No implementado aún");
+         if (pedidosPorId.cardinal() == 0) return null;
+        return pedidosPorId.minimo();
     }
 
     public String obtenerPedidosEnOrdenDeLlegada(){
@@ -26,11 +37,25 @@ public class SistemaPedidos {
        for (int i = 0; i < colallegada.longitud(); i++) {
             Pedido p = colallegada.obtener(i).valor();
             texto = texto + p.toString();
+            if (i +1 < colallegada.longitud()){
+                texto = texto + ", ";
+            }
         }
         return texto + "]";
     }
 
     public String obtenerPedidosOrdenadosPorId(){
-        throw new UnsupportedOperationException("No implementado aún");
+        String texto = "{";
+        ABB<Pedido>.ABB_Iterador it = pedidosPorId.new ABB_Iterador();
+        while (it.haySiguiente()) {
+            Pedido p = it.siguiente();
+            texto = texto + p.toString();
+            if (it.haySiguiente()){
+                texto = texto += ", ";
+            }
+        }
+        return texto + "}";
     }
+
+    
 }

@@ -225,5 +225,37 @@ public class ABB<T extends Comparable<T>> {
             }
     }
 
+    public class ABB_Iterador {
+        private Nodo _anterior;    
+        private Nodo _actual;
+       
+
+        public ABB_Iterador(){
+            this._anterior = null;
+            if (raiz != null){
+                this._actual = NodoMinRecur(raiz);
+            }else  {
+                this._actual = raiz;
+            }
+            
+        }
+
+        public boolean haySiguiente() {            
+           return this._actual != null; 
+        }
+    
+        public T siguiente() {
+            Nodo actualAnterior = this._actual;
+            this._anterior = actualAnterior;
+            Nodo siguiente = hallarsiguienteMenor(this._actual);
+            this._actual = siguiente;
+            return actualAnterior.valor;
+        } 
+    }
+
+    public ABB_Iterador iterador() {
+        return new ABB_Iterador();
+    }
+
 
 }
